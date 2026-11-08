@@ -1,0 +1,824 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Агенти цифрового світу</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+:root {
+  --bg: #101827;
+  --panel: #1c293d;
+  --panel2: #24344c;
+  --text: #f5f7ff;
+  --muted: #a9b7cc;
+  --cyan: #39d5e8;
+  --purple: #a78bfa;
+  --green: #55d69e;
+  --orange: #ffb65c;
+  --red: #ff7185;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
+  min-height: 100vh;
+}
+
+button { font-family: inherit; cursor: pointer; }
+
+header {
+  padding: 17px 6%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #344258;
+  background: #131f30;
+}
+
+.logo {
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: 1px;
+}
+
+.logo span { color: var(--cyan); }
+
+.score {
+  background: var(--panel2);
+  padding: 9px 17px;
+  border-radius: 30px;
+  color: var(--orange);
+  font-weight: 900;
+}
+
+main {
+  max-width: 900px;
+  margin: auto;
+  padding: 30px 18px 60px;
+}
+
+.hero {
+  text-align: center;
+  padding: 38px 15px;
+}
+
+.hero-icon {
+  font-size: 75px;
+  margin-bottom: 10px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 6px 15px;
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+h1 {
+  font-size: clamp(30px, 6vw, 52px);
+  line-height: 1.12;
+  margin: 20px 0;
+}
+
+h1 span { color: var(--cyan); }
+
+.subtitle {
+  color: var(--muted);
+  max-width: 570px;
+  margin: 0 auto 25px;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.primary {
+  background: linear-gradient(110deg, #22bfd7, #7b78f5);
+  border: 0;
+  color: white;
+  font-size: 17px;
+  font-weight: 900;
+  padding: 15px 32px;
+  border-radius: 13px;
+  box-shadow: 0 7px 25px #22bfd733;
+  transition: .2s;
+}
+
+.primary:hover { transform: translateY(-3px); }
+
+.secondary {
+  background: var(--panel2);
+  color: white;
+  border: 1px solid #40516b;
+  padding: 12px 22px;
+  border-radius: 11px;
+  font-weight: 800;
+}
+
+.progress-area { margin: 15px 0 25px; }
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 9px;
+}
+
+.progress {
+  height: 9px;
+  background: #2b3a50;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  width: 0;
+  transition: .4s;
+}
+
+.station-card {
+  background: var(--panel);
+  border: 1px solid #34445c;
+  border-radius: 22px;
+  padding: clamp(20px, 5vw, 35px);
+  box-shadow: 0 15px 45px #0003;
+}
+
+.station-number {
+  color: var(--cyan);
+  font-weight: 900;
+  letter-spacing: 2px;
+  font-size: 12px;
+}
+
+.station-card h2 {
+  font-size: clamp(25px, 5vw, 34px);
+  margin: 12px 0;
+}
+
+.description {
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 22px;
+}
+
+.question {
+  background: #263750;
+  border-left: 4px solid var(--cyan);
+  border-radius: 10px;
+  padding: 17px;
+  margin: 17px 0;
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+.options {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.option {
+  text-align: left;
+  padding: 15px;
+  border: 1px solid #40516b;
+  background: #263750;
+  color: white;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  transition: .2s;
+}
+
+.option:hover:not(:disabled) {
+  border-color: var(--cyan);
+  background: #30435f;
+}
+
+.option.correct {
+  border-color: var(--green);
+  background: #164b43;
+}
+
+.option.wrong {
+  border-color: var(--red);
+  background: #522d3a;
+}
+
+.option:disabled { cursor: default; }
+
+.feedback {
+  display: none;
+  padding: 14px;
+  border-radius: 10px;
+  margin: 15px 0;
+  line-height: 1.5;
+}
+
+.feedback.show { display: block; }
+.feedback.good { background: #164b43; color: #a5f4d2; }
+.feedback.bad { background: #522d3a; color: #ffc1cb; }
+
+.device-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.device {
+  background: #263750;
+  border: 1px solid #40516b;
+  padding: 17px 10px;
+  border-radius: 14px;
+  text-align: center;
+}
+
+.device-icon { font-size: 38px; }
+.device strong { display: block; margin-top: 8px; }
+.device small { color: var(--muted); }
+
+.info-box {
+  background: #253951;
+  border-radius: 12px;
+  padding: 16px;
+  line-height: 1.7;
+  margin: 17px 0;
+}
+
+.info-box strong { color: var(--cyan); }
+
+.task {
+  border: 1px solid #40516b;
+  background: #263750;
+  padding: 16px;
+  border-radius: 13px;
+  margin: 12px 0;
+}
+
+.task p { margin-top: 0; line-height: 1.6; }
+
+.task input, .task textarea, .task select {
+  width: 100%;
+  padding: 12px;
+  background: #152338;
+  border: 1px solid #50627b;
+  border-radius: 9px;
+  color: white;
+  font: inherit;
+  margin-top: 8px;
+}
+
+.task textarea { min-height: 75px; resize: vertical; }
+
+.task label {
+  display: block;
+  color: var(--muted);
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.navigation button:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+}
+
+.stars {
+  font-size: 45px;
+  text-align: center;
+  margin: 20px;
+}
+
+.certificate {
+  border: 2px dashed var(--cyan);
+  border-radius: 18px;
+  padding: 25px;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.certificate h2 { color: var(--orange); }
+
+footer {
+  text-align: center;
+  color: #74849c;
+  padding: 25px;
+  font-size: 12px;
+}
+
+.hidden { display: none !important; }
+
+@media(max-width:500px) {
+  header { padding: 13px; }
+  .logo { font-size: 14px; }
+  .score { font-size: 13px; }
+  .navigation button { padding: 11px; font-size: 13px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">◈ DIGITAL <span>AGENTS</span></div>
+  <div class="score">⭐ Бали: <span id="score">0</span></div>
+</header>
+
+<main>
+
+<!-- СТАРТОВИЙ ЕКРАН -->
+<section id="start">
+  <div class="hero">
+    <div class="hero-icon">🕵️‍♂️</div>
+    <div class="tag">СЕКРЕТНА МІСІЯ № 008</div>
+    <h1>АГЕНТИ<br><span>ЦИФРОВОГО СВІТУ</span></h1>
+    <p class="subtitle">
+      Комп'ютер не може самостійно дізнатися все про навколишній світ.
+      Хто допомагає йому отримувати інформацію?
+      Сьогодні ти станеш цифровим детективом!
+    </p>
+    <button class="primary" onclick="startGame()">🚀 РОЗПОЧАТИ МІСІЮ</button>
+    <p class="subtitle" style="margin-top:25px;font-size:13px">
+      6 дослідницьких станцій · 45 хвилин · Нові відкриття
+    </p>
+  </div>
+</section>
+
+<!-- ІГРОВИЙ ЕКРАН -->
+<section id="game" class="hidden">
+
+  <div class="progress-area">
+    <div class="progress-label">
+      <span id="progressText">СТАНЦІЯ 1 ІЗ 6</span>
+      <span id="percent">0%</span>
+    </div>
+    <div class="progress">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <div class="station-card">
+    <div class="station-number" id="stationNumber"></div>
+    <h2 id="stationTitle"></h2>
+    <div class="description" id="stationDescription"></div>
+    <div id="stationContent"></div>
+
+    <div class="navigation">
+      <button class="secondary" id="prevBtn" onclick="previousStation()">← Назад</button>
+      <button class="primary" id="nextBtn" onclick="nextStation()">Далі →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ФІНАЛ -->
+<section id="finish" class="hidden">
+  <div class="hero">
+    <div class="hero-icon">🏆</div>
+    <div class="tag">МІСІЮ ЗАВЕРШЕНО</div>
+    <h1>ВІТАЄМО,<br><span>АГЕНТЕ!</span></h1>
+    <p class="subtitle">
+      Ти пройшов усі станції цифрової лабораторії
+      та дослідив світ пристроїв введення.
+    </p>
+    <div class="certificate">
+      <div class="stars">🌟 🏆 🌟</div>
+      <h2>ЦИФРОВИЙ ЕКСПЕРТ</h2>
+      <p>Твій результат:</p>
+      <h1><span id="finalScore">0</span> балів</h1>
+      <p id="finalMessage"></p>
+    </div>
+    <button class="primary" onclick="location.reload()">🔄 ПРОЙТИ ЩЕ РАЗ</button>
+  </div>
+</section>
+
+</main>
+
+<footer>ІНФОРМАТИКА · 8 КЛАС · ЦИФРОВА ЛАБОРАТОРІЯ</footer>
+
+<script>
+
+let current = 0;
+let score = 0;
+let completed = {};
+let answered = {};
+
+const stations = [
+
+{
+title: "ВПІЗНАЙ АГЕНТА",
+icon: "🔎",
+description: "Перша місія! З'ясуй, які пристрої допомагають комп'ютеру отримувати інформацію.",
+content: `
+<div class="device-grid">
+  <div class="device"><div class="device-icon">⌨️</div><strong>Клавіатура</strong><small>Текст, числа</small></div>
+  <div class="device"><div class="device-icon">🖱️</div><strong>Миша</strong><small>Команди, рух</small></div>
+  <div class="device"><div class="device-icon">🎤</div><strong>Мікрофон</strong><small>Звук</small></div>
+  <div class="device"><div class="device-icon">📷</div><strong>Камера</strong><small>Зображення, відео</small></div>
+  <div class="device"><div class="device-icon">📄</div><strong>Сканер</strong><small>Зображення, текст</small></div>
+  <div class="device"><div class="device-icon">✍️</div><strong>Графічний планшет</strong><small>Малюнки</small></div>
+</div>
+
+<div class="info-box">
+<strong>Запам'ятай!</strong><br>
+Пристрої введення — це пристрої, за допомогою яких комп'ютер отримує дані від користувача або навколишнього середовища.
+Дані можуть бути текстовими, числовими, графічними, звуковими та відеоданими.
+</div>
+
+<div class="question">❓ Який із цих пристроїв призначений для введення звукової інформації?</div>
+<div class="options">
+<button class="option" onclick="answer(this,false,'Монітор призначений для виведення зображення.')">А. Монітор</button>
+<button class="option" onclick="answer(this,true,'Правильно! Мікрофон перетворює звук на цифрові дані.')">Б. Мікрофон</button>
+<button class="option" onclick="answer(this,false,'Принтер виводить інформацію на папір.')">В. Принтер</button>
+</div>
+<div class="feedback" id="feedback"></div>
+`
+},
+
+{
+title: "ЦИФРОВИЙ ДЕТЕКТИВ",
+icon: "🕵️",
+description: "Розслідуй п'ять ситуацій. Визнач, який пристрій введення допоможе розв'язати кожну проблему.",
+content: `
+<div class="info-box">🔐 <strong>Правило детектива:</strong> обирай пристрій і пояснюй, які дані він допомагає отримати.</div>
+
+${makeQuestion("1. Дизайнер малює на комп'ютері спеціальним електронним пером.","Графічний планшет",["Мікрофон","Графічний планшет","Принтер"],"Планшет передає координати руху пера та силу натискання.")}
+
+${makeQuestion("2. На складі потрібно зчитати штрихкод товару.","Сканер штрихкодів",["Вебкамера","Клавіатура","Сканер штрихкодів"],"Сканер зчитує закодовану інформацію зі штрихкоду.")}
+
+${makeQuestion("3. Людина диктує текст, а комп'ютер його записує.","Мікрофон",["Мікрофон","Монітор","Миша"],"Мікрофон отримує звукові дані, а програма розпізнає мовлення.")}
+
+${makeQuestion("4. Потрібно оцифрувати стару паперову фотографію.","Сканер",["Колонки","Сканер","Проєктор"],"Сканер перетворює зображення з паперу на цифрову форму.")}
+
+${makeQuestion("5. Смартфон визначає, наскільки сильно його нахилили.","Акселерометр або гіроскоп",["Принтер","Мікрофон","Акселерометр або гіроскоп"],"Датчики смартфона отримують дані про рух та орієнтацію пристрою.")}
+
+`,
+},
+
+{
+title: "ТЕХНІЧНА ЕКСПЕРТИЗА",
+icon: "⚙️",
+description: "Справжній експерт повинен знати не лише назви пристроїв, а й те, які властивості визначають їхню якість.",
+content: `
+<div class="info-box">
+<strong>Властивості пристроїв введення:</strong>
+<ul>
+<li><strong>DPI</strong> — чутливість сенсора миші або оптична роздільна здатність сканера (залежно від пристрою).</li>
+<li><strong>FPS</strong> — кількість кадрів відео за секунду.</li>
+<li><strong>Чутливість мікрофона</strong> — реакція на звуковий сигнал.</li>
+<li><strong>Глибина кольору</strong> — кількість бітів, якими кодується колір.</li>
+<li><strong>Рівні натискання пера</strong> — розпізнавання сили натискання на графічному планшеті.</li>
+</ul>
+</div>
+
+${makeQuestion("1. Що означає 60 FPS у характеристиках вебкамери?","60 кадрів за секунду",["60 мегапікселів","60 кадрів за секунду","60 кольорів"],"FPS — це кількість кадрів, які передаються за секунду.")}
+
+${makeQuestion("2. Художник хоче змінювати товщину лінії силою натискання пера. Що важливо?","Рівні чутливості до натискання",["Кількість кнопок","Рівні чутливості до натискання","Довжина кабелю"],"Планшет повинен розпізнавати різну силу натискання.")}
+
+${makeQuestion("3. Що важливо під час сканування старої фотографії?","Оптична роздільна здатність",["Колір корпусу","Оптична роздільна здатність","Кількість кнопок"],"Вища оптична роздільна здатність дозволяє отримати більше деталей.")}
+
+${makeQuestion("4. Що характеризує DPI миші?","Чутливість переміщення вказівника",["Яскравість екрана","Чутливість переміщення вказівника","Гучність звуку"],"DPI пов'язаний із чутливістю сенсора миші.")}
+
+<div class="question">💡 Подумай: чи завжди пристрій із найбільшим числовим показником є найкращим?</div>
+<p>Ні. Все залежить від завдання, умов використання та інших характеристик.</p>
+`
+},
+
+{
+title: "РЕАЛЬНЕ ВИПРОБУВАННЯ",
+icon: "📱",
+description: "Тепер ти сам дослідник! Використай смартфон і перевір, як він отримує інформацію.",
+content: `
+<div class="info-box">
+<strong>Місія: «Смартфон — цифрова лабораторія»</strong><br>
+Виконай три експерименти. Якщо смартфона немає, можеш описати очікуваний результат.
+</div>
+
+<div class="task">
+<strong>🎤 Експеримент 1. Голос</strong>
+<p>Відкрий диктофон і запиши коротку фразу.</p>
+<label>Який пристрій використано?</label>
+<input id="exp1" placeholder="Твоя відповідь...">
+</div>
+
+<div class="task">
+<strong>📷 Експеримент 2. Зображення</strong>
+<p>Зроби фотографію будь-якого предмета.</p>
+<label>Які дані отримує комп'ютер?</label>
+<input id="exp2" placeholder="Твоя відповідь...">
+</div>
+
+<div class="task">
+<strong>👆 Експеримент 3. Дотик</strong>
+<p>Намалюй пальцем фігуру в нотатках смартфона.</p>
+<label>Який спосіб введення ти використав?</label>
+<input id="exp3" placeholder="Твоя відповідь...">
+</div>
+
+<button class="primary" onclick="checkExperiment()">ЗАВЕРШИТИ ДОСЛІДЖЕННЯ</button>
+<div class="feedback" id="experimentFeedback"></div>
+`
+},
+
+{
+title: "СТВОРИ СВІЙ ПРИСТРІЙ",
+icon: "🚀",
+description: "Ти — розробник нової цифрової системи. Обери професію та спроєктуй набір пристроїв введення.",
+content: `
+<div class="info-box">
+<strong>Завдання конструктора:</strong><br>
+Для обраної професії визнач три пристрої введення, які будуть найкориснішими.
+</div>
+
+<div class="task">
+<label>1. Для кого ти створюєш систему?</label>
+<select id="profession">
+<option value="">Обери професію</option>
+<option>Лікар</option>
+<option>Архітектор</option>
+<option>Музикант</option>
+<option>Дослідник океану</option>
+<option>Кіберспортсмен</option>
+<option>Інша професія</option>
+</select>
+</div>
+
+<div class="task">
+<label>2. Перший пристрій</label>
+<input id="dev1" placeholder="Наприклад, вебкамера">
+<label>3. Другий пристрій</label>
+<input id="dev2" placeholder="Наприклад, мікрофон">
+<label>4. Третій пристрій</label>
+<input id="dev3" placeholder="Наприклад, сенсор">
+</div>
+
+<div class="task">
+<label>5. Чому ти обрав саме ці пристрої? Які дані вони отримуватимуть?</label>
+<textarea id="reason" placeholder="Поясни своє рішення..."></textarea>
+</div>
+
+<button class="primary" onclick="checkDesign()">ПОДАТИ ПРОЄКТ</button>
+<div class="feedback" id="designFeedback"></div>
+`
+},
+
+{
+title: "ФІНАЛЬНА ПЕРЕВІРКА",
+icon: "🏆",
+description: "Останнє випробування! Доведи, що ти справжній експерт із пристроїв введення.",
+content: `
+${makeQuestion("1. Пристрої введення призначені для...","Отримання даних комп'ютером",["Виведення інформації на папір","Отримання даних комп'ютером","Зберігання файлів"],"Пристрої введення забезпечують надходження даних до комп'ютера.")}
+
+${makeQuestion("2. Який пристрій вводить графічну інформацію за допомогою пера?","Графічний планшет",["Колонки","Принтер","Графічний планшет"],"Графічний планшет дає змогу малювати та вводити графічні дані.")}
+
+${makeQuestion("3. Яка характеристика пов'язана з якістю відео вебкамери?","FPS",["FPS","DPI миші","Кількість клавіш"],"FPS характеризує частоту кадрів відео.")}
+
+${makeQuestion("4. Який датчик може визначати прискорення смартфона?","Акселерометр",["Мікрофон","Акселерометр","Сканер"],"Акселерометр вимірює прискорення та допомагає визначати рух.")}
+
+${makeQuestion("5. Чи є сенсорний екран пристроєм введення?","Так",["Ні","Так","Лише пристроєм виведення"],"Так! Сенсорний екран приймає дотики користувача, хоча водночас може виводити інформацію.")}
+
+`
+}
+
+];
+
+// Створення тестового запитання
+function makeQuestion(question, correct, options, explanation) {
+  return `
+  <div class="task quiz-task">
+    <p>${question}</p>
+    <div class="options">
+      ${options.map((o,i)=>`
+      <button class="option" onclick="answer(this,${o===correct},'${explanation.replace(/'/g,"\\'")}',this.parentElement)">
+        ${String.fromCharCode(1040+i)}. ${o}
+      </button>`).join('')}
+    </div>
+    <div class="feedback"></div>
+  </div>`;
+}
+
+function startGame() {
+  document.getElementById('start').classList.add('hidden');
+  document.getElementById('game').classList.remove('hidden');
+  renderStation();
+}
+
+function renderStation() {
+  const s = stations[current];
+
+  document.getElementById('stationNumber').textContent =
+    `СТАНЦІЯ ${current+1} / ${stations.length}`;
+
+  document.getElementById('stationTitle').textContent =
+    s.icon + " " + s.title;
+
+  document.getElementById('stationDescription').textContent =
+    s.description;
+
+  document.getElementById('stationContent').innerHTML = s.content;
+
+  document.getElementById('progressText').textContent =
+    `СТАНЦІЯ ${current+1} ІЗ ${stations.length}`;
+
+  let percent = Math.round((current/stations.length)*100);
+
+  document.getElementById('percent').textContent = percent+'%';
+  document.getElementById('progressFill').style.width = percent+'%';
+
+  document.getElementById('prevBtn').disabled = current===0;
+
+  document.getElementById('nextBtn').textContent =
+    current===stations.length-1 ? '🏆 ФІНАЛ' : 'ДАЛІ →';
+
+  document.getElementById('score').textContent = score;
+  
+  // Відновлення відповідей під час повернення до станції
+  if (answered[current]) {
+    restoreAnswers();
+  }
+}
+
+function restoreAnswers() {
+  document.querySelectorAll('.quiz-task').forEach((task, i) => {
+    const saved = answered[current].quiz?.[i];
+    if (!saved) return;
+
+    const buttons = task.querySelectorAll('.option');
+    buttons.forEach((b, j) => {
+      b.disabled = true;
+      if (j === saved.index) {
+        b.classList.add(saved.correct ? 'correct' : 'wrong');
+      }
+      if (!saved.correct && b.textContent.trim().slice(3) === saved.correctAnswer) {
+        b.classList.add('correct');
+      }
+    });
+
+    const feedback = task.querySelector('.feedback');
+    feedback.textContent = saved.message;
+    feedback.className = 'feedback show ' + (saved.correct ? 'good' : 'bad');
+  });
+}
+
+function answer(button, correct, explanation, container) {
+  if (button.disabled) return;
+
+  // Для звичайного тесту та для тестів усередині завдань
+  const parent = container || button.parentElement;
+  const buttons = parent.querySelectorAll('.option');
+  const feedback = container
+    ? container.nextElementSibling
+    : document.getElementById('feedback');
+
+  buttons.forEach(b => b.disabled = true);
+
+  if (correct) {
+    button.classList.add('correct');
+    score += 10;
+    feedback.textContent = '✅ Правильно! ' + explanation;
+    feedback.className = 'feedback show good';
+  } else {
+    button.classList.add('wrong');
+    const correctText = [...buttons].find(b => {
+      return b.getAttribute('onclick')?.includes('true,');
+    });
+    if (correctText) correctText.classList.add('correct');
+
+    feedback.textContent = '❌ Не зовсім! ' + explanation;
+    feedback.className = 'feedback show bad';
+  }
+
+  if (container) {
+    const task = button.closest('.quiz-task');
+    const tasks = [...document.querySelectorAll('.quiz-task')];
+    const index = tasks.indexOf(task);
+
+    if (!answered[current]) answered[current] = {quiz:{}};
+
+    answered[current].quiz[index] = {
+      index: [...buttons].indexOf(button),
+      correct,
+      correctAnswer: correctTextText(buttons),
+      message: feedback.textContent
+    };
+  }
+
+  document.getElementById('score').textContent = score;
+}
+
+function correctTextText(buttons) {
+  const correctButton = [...buttons].find(b =>
+    b.getAttribute('onclick')?.includes('true,')
+  );
+  return correctButton ? correctButton.textContent.trim().slice(3) : '';
+}
+
+function checkExperiment() {
+  const ids = ['exp1','exp2','exp3'];
+  const values = ids.map(id => document.getElementById(id).value.trim());
+  const feedback = document.getElementById('experimentFeedback');
+
+  if (values.some(v => !v)) {
+    feedback.textContent = 'Заповни всі три поля, щоб завершити дослідження.';
+    feedback.className = 'feedback show bad';
+    return;
+  }
+
+  if (!completed[current]) {
+    score += 30;
+    completed[current] = true;
+  }
+
+  feedback.innerHTML =
+    '🎉 Дослідження завершено! Ти перевірив роботу мікрофона, камери та сенсорного екрана. +30 балів!';
+  feedback.className = 'feedback show good';
+  document.getElementById('score').textContent = score;
+}
+
+function checkDesign() {
+  const profession = document.getElementById('profession').value;
+  const devices = ['dev1','dev2','dev3'].map(id =>
+    document.getElementById(id).value.trim()
+  );
+  const reason = document.getElementById('reason').value.trim();
+  const feedback = document.getElementById('designFeedback');
+
+  if (!profession || devices.some(d=>!d) || !reason) {
+    feedback.textContent = 'Заповни всі поля проєкту!';
+    feedback.className = 'feedback show bad';
+    return;
+  }
+
+  if (!completed[current]) {
+    score += 30;
+    completed[current] = true;
+  }
+
+  feedback.innerHTML =
+    `🚀 Проєкт для професії «${profession}» створено!<br>
+    Твої пристрої: ${devices.join(', ')}.<br>
+    Чудова робота конструктора! +30 балів.`;
+  feedback.className = 'feedback show good';
+  document.getElementById('score').textContent = score;
+}
+
+function nextStation() {
+  if (current < stations.length-1) {
+    current++;
+    renderStation();
+  } else {
+    finishGame();
+  }
+}
+
+function previousStation() {
+  if (current > 0) {
+    current--;
+    renderStation();
+  }
+}
+
+function finishGame() {
+  document.getElementById('game').classList.add('hidden');
+  document.getElementById('finish').classList.remove('hidden');
+
+  document.getElementById('finalScore').textContent = score;
+
+  let message = '';
+
+  if (score >= 100) {
+    message = 'Ти справжній майстер цифрових технологій!';
+  } else if (score >= 60) {
+    message = 'Чудова робота! Ти добре розбираєшся у пристроях введення!';
+  } else {
+    message = 'Місію завершено! Продовжуй досліджувати цифровий світ!';
+  }
+
+  document.getElementById('finalMessage').textContent = message;
+  document.getElementById('score').textContent = score;
+}
+
+</script>
+
+</body>
+</html>
